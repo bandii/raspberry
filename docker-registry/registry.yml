@@ -1,0 +1,90 @@
+﻿# Define the PV
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: docker-pv
+  namespace: docker-registry
+  labels:
+    app: docker-registry
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce # TODO: ReadWriteOncePod?
+  hostPath:
+    path: "/data/docker"
+
+---
+# Claim the whole PV
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: docker-pvc
+  namespace: docker-registry
+  labels:
+    app: docker-registry
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+
+---
+# Deploy docker-registry with its built-in UI
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: docker-registry
+  namespace: docker-registry
+  labels:
+    app: docker-registry
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: docker-registry
+  template:
+    metadata:
+      labels:
+        app: docker-registry
+        name: docker-registry
+    spec:
+      containers:
+        - name: registry
+          image: registry:2
+          ports:
+            - containerPort: 5000
+          env:
+            - name: REGISTRY_STORAGE_DELETE_ENABLED
+              value: "true"
+          volumeMounts:
+            - mountPath: /var/lib/registry
+              name: volume
+      volumes:
+        - name: volume
+          persistentVolumeClaim:
+            claimName: docker-pvc
+
+---
+# Expose the POD in the Cluster
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: docker-registry
+  name: docker-registry
+  namespace: docker-registry
+spec:
+  ports:
+    - port: 5000
+      protocol: TCP
+      targetPort: 5000
+  selector:
+    app: docker-registry
+  type: ClusterIP

@@ -1,0 +1,28 @@
+﻿# Skips the insecure comm
+
+apiVersion: traefik.containo.us/v1alpha1
+kind: ServersTransport
+metadata:
+  name: traefik-dashboard-transport
+  namespace: kube-system
+spec:
+  serverName: traefik-dashboard
+  insecureSkipVerify: true
+
+---
+# Sets the /dashboard at the web (:8000) entrypoint
+
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: traefik-dashboard
+  namespace: kube-system
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: PathPrefix(`/dashboard`) || PathPrefix(`/api`)
+      kind: Rule
+      services:
+        - name: api@internal
+          kind: TraefikService

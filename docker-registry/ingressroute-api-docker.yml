@@ -1,0 +1,14 @@
+﻿apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRouteTCP
+metadata:
+  name: docker-tcp
+  namespace: docker-registry
+spec:
+  entryPoints:
+    - docker
+  routes:
+    - match: HostSNI(`*`)
+      services:
+        - name: docker-registry
+          namespace: docker-registry
+          port: 5000
