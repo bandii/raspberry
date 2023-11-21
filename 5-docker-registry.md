@@ -40,5 +40,7 @@ E.g.: run these commands on your PC:
 3. ```docker push {host}:9999/ping```
 4. ```curl {host}:9999/v2/_catalog``` => you should see the "ping" repository!
 
-
+# Docker Registry UI
+1. Ensure you deployed the yml files with ```ui``` in their names.
+2. Access the docker ui via ```{host}:8080\docker\```
 
