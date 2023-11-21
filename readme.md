@@ -2,12 +2,8 @@
 It helps to find out what did I set up and when.
 
 ## // TODO:
-- [ ] Add a DB
-- [ ] Npm registry with UI -> https://verdaccio.org/
-- [ ] Add Service-Mesh
-- [ ] ArgoCD or Flux?
+- [ ] Add Traefik and some general Observability tools -> https://doc.traefik.io/traefik/observability/metrics/overview/
 
 - [ ] Move the portainer to k3s
-
 - [ ] Set users and roles
 - [ ] Add https with custom cert?
