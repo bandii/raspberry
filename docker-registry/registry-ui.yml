@@ -1,0 +1,51 @@
+﻿# Deploy docker-registry UI
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: docker-registry-ui
+  namespace: docker-registry
+  labels:
+    app: docker-registry-ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: docker-registry-ui
+  template:
+    metadata:
+      labels:
+        app: docker-registry-ui
+        name: docker-registry-ui
+    spec:
+      containers:
+        - name: registry-ui
+          image: joxit/docker-registry-ui
+          ports:
+            - containerPort: 80
+          env:
+            - name: NGINX_PROXY_PASS_URL
+              value: http://$(DOCKER_REGISTRY_SERVICE_HOST):$(DOCKER_REGISTRY_SERVICE_PORT)
+            - name: DELETE_IMAGES
+              value: "true"
+            - name: SINGLE_REGISTRY
+              value: "true"
+
+---
+# Expose the POD in the Cluster
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: docker-registry-ui
+  name: docker-registry-ui
+  namespace: docker-registry
+spec:
+  ports:
+    - port: 5050
+      protocol: TCP
+      targetPort: 80
+  selector:
+    app: docker-registry-ui
+  type: ClusterIP

@@ -34,7 +34,7 @@ spec:
       storage: 10Gi
 
 ---
-# Deploy docker-registry with its built-in UI
+# Deploy docker-registry
 
 apiVersion: apps/v1
 kind: Deployment

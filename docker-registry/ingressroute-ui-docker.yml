@@ -1,0 +1,32 @@
+﻿# The registry-ui uses nginx, what cannot serve the index.html under /docker (or anything else), but the root /
+
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: docker-middleware
+  namespace: docker-registry
+spec:
+  stripPrefix:
+    prefixes:
+      - /docker
+
+---
+
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: docker-ui
+  namespace: docker-registry
+spec:
+  entryPoints:
+    - web
+  routes:
+    - kind:
+        Rule
+      match: PathPrefix(`/docker`)
+      middlewares:
+        - name: docker-middleware
+      services:
+        - name: docker-registry-ui
+          namespace: docker-registry
+          port: 5050

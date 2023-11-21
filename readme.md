@@ -2,9 +2,11 @@
 It helps to find out what did I set up and when.
 
 ## // TODO:
-- [ ] Docker UI
+- [ ] Add a DB
+- [ ] Npm registry with UI -> https://verdaccio.org/
 - [ ] Add Service-Mesh
 - [ ] ArgoCD or Flux?
+
 - [ ] Move the portainer to k3s
 
 - [ ] Set users and roles
