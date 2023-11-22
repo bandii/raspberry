@@ -1,0 +1,38 @@
+﻿apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: argocd-server
+  namespace: argocd
+spec:
+  entryPoints:
+    - web
+  routes:
+    - kind: Rule
+      match: PathPrefix(`/argocd`)
+      priority: 10
+      middlewares:
+        - name: argocd-middleware
+      services:
+        - name: argocd-server
+          port: 80
+    - kind: Rule
+      match: PathPrefix(`/argocd`) && Headers(`Content-Type`, `application/grpc`)
+      priority: 20
+      middlewares:
+        - name: argocd-middleware
+      services:
+        - name: argocd-server
+          port: 80
+          scheme: h2c
+
+---
+    
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: argocd-middleware
+  namespace: argocd
+spec:
+  stripPrefix:
+    prefixes:
+      - /argocd
