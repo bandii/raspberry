@@ -1,0 +1,90 @@
+﻿# Define the PV
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: aws-pv
+  namespace: aws
+  labels:
+    app: aws
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 2Gi
+  accessModes:
+    - ReadWriteOnce # TODO: ReadWriteOncePod?
+  hostPath:
+    path: "/data/aws"
+
+---
+# Claim the whole PV
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: aws-pvc
+  namespace: aws
+  labels:
+    app: dynamodb
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+
+---
+# Deploy
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dynamodb
+  namespace: aws
+  labels:
+    app: dynamodb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dynamodb
+  template:
+    metadata:
+      labels:
+        app: dynamodb
+        name: dynamodb
+    spec:
+      containers:
+        - name: dynamodb
+          image: amazon/dynamodb-local:latest
+          ports:
+            - containerPort: 8000
+          env:
+            - name: region
+              value: "local"
+          volumeMounts:
+            - mountPath: /home/dynamodblocal/data
+              name: volume
+      volumes:
+        - name: volume
+          persistentVolumeClaim:
+            claimName: aws-pvc
+
+---
+# Expose the POD in the Cluster
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: dynamodb
+  name: dynamodb
+  namespace: aws
+spec:
+  ports:
+    - port: 8000
+      protocol: TCP
+      targetPort: 8000
+  selector:
+    app: dynamodb
+  type: ClusterIP

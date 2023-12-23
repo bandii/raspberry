@@ -17,6 +17,10 @@ spec:
         port: 8000
         expose: true
         exposedPort: 8080
+      tcp:
+        port: 9090
+        expose: true
+        exposedPort: 9090
       docker:
         port: 9999
         expose: true

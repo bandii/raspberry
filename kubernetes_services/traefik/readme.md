@@ -5,4 +5,7 @@ _It is necessary, because traefik is installed by default at k3s via helm chart.
     Use the ```touch``` and ```nano``` commands for creation and edit the config yaml. \
    2. Restart your device! or the namespace the traefik is at => ```kubectl -n kube-system rollout restart deploy```
 2. Apply the [ingressroute-traefik-dashboard.yml](k3s/ingressroute-traefik-dashboard.yml), what is going to assign the ```:8000/dashboard/``` to the ```:9000/dashboard/```
-3. Access the traefik at ```{host}:8080/dashboard/```. Note the port is not 8000, but 8080!
+3. Access the traefik at ```{host}:8080/dashboard/```.
+
+## Note the port is not 8000, but 8080!
+
