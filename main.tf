@@ -1,6 +1,6 @@
 ﻿module "cockpit" {
   source = "./cockpit"
-  
+
   providers = {
     system = system
   }
@@ -18,7 +18,7 @@ module "docker" {
 
 module "kubernetes" {
   source = "./kubernetes"
-  
+
   system_host = var.system_host
   system_user = var.system_user
 
@@ -31,6 +31,12 @@ module "kubernetes" {
 
 module "kubernetes_services" {
   source = "./kubernetes_services"
-  
+
+  providers = {
+    kubernetes = kubernetes
+    kubectl    = kubectl
+    helm       = helm
+  }
+
   depends_on = [module.kubernetes]
 }

@@ -1,0 +1,17 @@
+﻿apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: portainer
+  namespace: portainer
+spec:
+  entryPoints:
+    - web
+  routes:
+    - kind: Rule
+      match: PathPrefix(`/portainer`)
+      priority: 10
+      middlewares:
+        - name: portainer-middleware
+      services:
+        - name: portainer
+          port: 9000

@@ -1,7 +1,7 @@
 ﻿terraform {
   required_providers {
     local = {
-      source = "hashicorp/local"
+      source  = "hashicorp/local"
       version = "2.4.1"
     }
     system = {
@@ -13,12 +13,12 @@
       version = "0.7.0"
     }
     kubernetes = {
-      source = "hashicorp/kubernetes"
-      version = "2.24.0"
-    }
-    kubernetes = {
       source  = "hashicorp/kubernetes"
       version = "2.24.0"
+    }
+    kubectl = {
+      source  = "froberg-co/kubectl"
+      version = "2.0.4"
     }
     helm = {
       source  = "hashicorp/helm"
@@ -33,7 +33,7 @@ provider "system" {
     user     = var.system_user
     password = var.system_password
   }
-  
+
   sudo = true
 }
 
@@ -47,9 +47,17 @@ provider "local" {
 }
 
 provider "kubernetes" {
-  config_path = "../kubernetes/kubeconfig.yaml"
+  config_path = "./kubernetes/kubeconfig.yaml"
 }
 
 provider "helm" {
-  config_path = "../kubernetes/kubeconfig.yaml"
+  kubernetes {
+    config_path = "./kubernetes/kubeconfig.yaml"
+  }
+}
+
+provider "kubectl" {
+  host             = var.system_host
+  config_path      = "./kubernetes/kubeconfig.yaml"
+  load_config_file = true
 }

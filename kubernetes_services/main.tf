@@ -1,8 +1,8 @@
-﻿resource "helm_release" "portainer" {
-  name             = "portainer"
-  namespace        = "portainer"
-  create_namespace = true
+﻿module "portainer" {
+  source = "./services/portainer"
 
-  repository = "https://portainer.github.io/k8s/"
-  chart      = "portainer"
+  providers = {
+    kubectl = kubectl
+    helm    = helm
+  }
 }

@@ -15,5 +15,3 @@ variable "system_password" {
   nullable    = false
   description = "Password to access it"
 }
-
-# Modify the provider called 'system' if you want another auth

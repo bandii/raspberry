@@ -1,0 +1,9 @@
+﻿apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: portainer-middleware
+  namespace: portainer
+spec:
+  stripPrefix:
+    prefixes:
+      - /portainer
