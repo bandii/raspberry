@@ -16,9 +16,9 @@ sudo apt update && sudo apt install terraform
 # III. Terraform setup on your machine
 1. Create a variables.auto.tfvars file with a similar content:
 ```dotenv
-   system_host="192.168.1.103"
-   system_user="bandi"
-   system_password="bandijenei15"
+   system_host="xx.xx.xx.xx"
+   system_user="xxx"
+   system_password="xxx"
    LOG=debug
 ```
 _Or you can set the variables according to the docs, via Environment variables, or via a specific tfvars file for example: `terraform plan -var-file=”my_variables.tfvars”`_
